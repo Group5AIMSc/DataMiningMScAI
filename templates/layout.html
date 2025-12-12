@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>NYC Taxi Dashboard</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+<header>
+  <h1>NYC Taxi Dashboard</h1>
+</header>
+<main>
+  {% block content %}{% endblock %}
+</main>
+<footer>
+  Built with Flask • PostgreSQL • Plotly • Leaflet
+</footer>
+</body>
+</html>

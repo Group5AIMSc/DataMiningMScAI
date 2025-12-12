@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2 class="page-title">Trip Distance Histogram</h2>
+<div class="chart-container">
+  <div id="histogram" style="height:500px;"></div>
+  <p class="explain">Distribution of trip distances for all trips under 50 miles.</p>
+</div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+fetch('/api/trip_distance')
+  .then(r => r.json())
+  .then(data => {
+      const trace = {
+          x: data,
+          type: 'histogram',
+          marker: {color:'rgb(31,119,180)'}
+      };
+      const layout = {
+          title: 'Trip Distance Histogram',
+          xaxis: {title: 'Trip Distance (miles)'},
+          yaxis: {title: 'Number of Trips'}
+      };
+      Plotly.newPlot('histogram', [trace], layout, {responsive:true});
+  });
+</script>
+{% endblock %}

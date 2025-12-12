@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NYC Taxi Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="brand">NYC TAXI DATASET — GROUP 5</div>
+  <div class="subtitle">Interactive Data Visualizations</div>
+</header>
+
+<main>
+  <section class="tiles-grid">
+    <a class="tile" href="/trips_hour">Trips per Hour</a>
+    <a class="tile" href="/trips_day">Trips per Day</a>
+    <a class="tile" href="/avg_fare_hour">Average Fare per Hour</a>
+    <a class="tile" href="/tip_distribution">Payment Type</a>
+    <a class="tile" href="/trip_distance">Trip Distance Histogram</a>
+    <a class="tile" href="/map">Pickup & Dropoff Map</a>
+  </section>
+</main>
+
+<footer>
+  Built with Flask • PostgreSQL • Plotly • Leaflet
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2 class="page-title">Pickup & Dropoff Map</h2>
+<div id="map" style="height:700px;"></div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+const map = L.map('map').setView([40.75, -73.98], 12);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap'
+}).addTo(map);
+
+fetch('/api/map_points')
+.then(r => r.json())
+.then(data => {
+    data.forEach(p => {
+        let color = p.type === 'pickup' ? 'blue' : 'red';
+        L.circleMarker([p.lat, p.lng], {
+            radius: 5,
+            color: color,
+            fillOpacity: 0.6
+        }).addTo(map);
+    });
+});
+</script>
+{% endblock %}

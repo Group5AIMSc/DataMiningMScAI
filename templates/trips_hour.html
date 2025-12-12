@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2 class="page-title">Trips per Hour</h2>
+<div class="chart-container">
+    <div id="trips-hour-chart" style="height:500px;"></div>
+    <p class="explain">Number of taxi trips for each hour of the day (0–23).</p>
+</div>
+
+<script>
+fetch('/api/trips_per_hour')
+.then(r => r.json())
+.then(data => {
+    const hours = data.map(d => d.hour);
+    const trips = data.map(d => d.trips);
+
+    const trace = {
+        x: hours,
+        y: trips,
+        type: 'bar',
+        marker: {color: 'rgb(255,204,0)'},
+        hovertemplate: 'Hour %{x}: %{y} trips<extra></extra>'
+    };
+
+    const layout = {
+        title: 'NYC Taxi Trips per Hour',
+        xaxis: {title:'Hour of Day', dtick:1},
+        yaxis: {title:'Number of Trips'},
+        margin:{t:50,b:50}
+    };
+
+    Plotly.newPlot('trips-hour-chart', [trace], layout, {responsive:true});
+});
+</script>
+{% endblock %}

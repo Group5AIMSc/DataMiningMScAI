@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2 class="page-title">Average Fare per Hour</h2>
+<div class="chart-container">
+    <div id="avg-fare-chart" style="height:500px;"></div>
+    <p class="explain">Average taxi fare per hour of the day — shows pricing trends and peak demand times.</p>
+</div>
+
+<script>
+fetch('/api/avg_fare_hour')
+.then(r => r.json())
+.then(data => {
+    const hours = data.map(d => d.hour);
+    const avgFare = data.map(d => d.avg_fare);
+
+    const trace = {
+        x: hours,
+        y: avgFare,
+        type: 'scatter',
+        mode: 'lines+markers',
+        line: {color:'rgb(255,204,0)'},
+        marker: {size:6}
+    };
+
+    const layout = {
+        title: 'Average Fare per Hour',
+        xaxis: {title:'Hour of Day', dtick:1},
+        yaxis: {title:'Average Fare (USD)'},
+        margin:{t:50,b:50}
+    };
+
+    Plotly.newPlot('avg-fare-chart', [trace], layout, {responsive:true});
+});
+</script>
+{% endblock %}

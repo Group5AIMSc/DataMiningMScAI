@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2 class="page-title">Payment Type Distribution</h2>
+<div class="chart-container">
+  <div id="payment-chart" style="height:500px;"></div>
+  <p class="explain">Distribution of payment types used (credit card/cash/etc.).</p>
+</div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+fetch('/api/payment_distribution')
+  .then(r=>r.json())
+  .then(data=>{
+    const labels = data.map(d=>d.payment_type);
+    const values = data.map(d=>d.cnt);
+    const pie = { labels, values, type:'pie', textinfo:'label+percent', insidetextorientation:'radial' };
+    const layout = { title:'Payment Type Distribution' };
+    Plotly.newPlot('payment-chart',[pie],layout,{responsive:true});
+  });
+</script>
+{% endblock %}
+
+
+{% extends "layout.html" %}
+{% block content %}
+<h2 class="page-title">Pickup & Dropoff Heatmap</h2>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+
+<div id="map" style="height:700px;"></div>
+
+<!-- Legend / explanation -->
+<div style="margin-top:10px; text-align:center; font-weight:bold; color:white;">
+    <p>Heatmap Color Legend:</p>
+    <span style="color:blue;">&#9608;</span> Low intensity (few pickups/dropoffs) &nbsp;&nbsp;
+    <span style="color:cyan;">&#9608;</span> Medium-low intensity &nbsp;&nbsp;
+    <span style="color:yellow;">&#9608;</span> Medium intensity &nbsp;&nbsp;
+    <span style="color:orange;">&#9608;</span> intense &nbsp;&nbsp;
+    <span style="color:red;">&#9608;</span> high intensity (many pickups/dropoffs)
+</div>
+
+<script>
+const map = L.map('map').setView([40.75, -73.98], 12);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap'
+}).addTo(map);
+
+fetch('/api/heatmap')
+  .then(r => r.json())
+  .then(data => {
+      const points = data.map(d => [d.lat, d.lng, d.intensity]);
+      L.heatLayer(points, { radius: 25 }).addTo(map);
+  });
+</script>
+{% endblock %}

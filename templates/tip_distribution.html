@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2 class="page-title">Payment Type Distribution</h2>
+<div class="chart-container" style="display:flex; align-items:flex-start; gap:30px;">
+
+  <!-- Pie Chart -->
+  <div id="payment-pie" style="height:500px; width:70%;"></div>
+
+  <!-- Legend -->
+  <div style="width:30%; font-weight:600;">
+    <h3>Legend</h3>
+    <p><span style="display:inline-block; width:20px; height:20px; background-color:#1f77b4; margin-right:8px;"></span>Cash (0)</p>
+    <p><span style="display:inline-block; width:20px; height:20px; background-color:#ff7f0e; margin-right:8px;"></span>Card (1)</p>
+    <p><span style="display:inline-block; width:20px; height:20px; background-color:#2ca02c; margin-right:8px;"></span>Other (2)</p>
+    <p><span style="display:inline-block; width:20px; height:20px; background-color:#d62728; margin-right:8px;"></span>Unknown/Fallback</p>
+  </div>
+
+</div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+fetch('/api/payment_type')
+  .then(r => r.json())
+  .then(data => {
+      const labels = data.map(d => d.payment_type);
+      const values = data.map(d => d.count);
+
+      // Assign colors
+      const colorMap = {
+          "0": "#1f77b4",  // Blue for Cash
+          "1": "#ff7f0e",  // Orange for Card
+          "2": "#2ca02c"   // Green for Other
+      };
+      const colors = labels.map(l => colorMap[l] || "#d62728"); // fallback red
+
+      const trace = {
+          labels: labels,
+          values: values,
+          type: 'pie',
+          textinfo: 'label+percent',
+          insidetextorientation: 'radial',
+          marker: {colors: colors}
+      };
+
+      const layout = {
+          title: 'Payment Type Distribution',
+      };
+
+      Plotly.newPlot('payment-pie', [trace], layout, {responsive:true});
+  });
+</script>
+{% endblock %}
